@@ -6,7 +6,7 @@
   (let [[value rng] (f rng)]
     (lazy-cat [value] (iterate-with rng f))))
 
-(deftest int-random-generation
+(deftest integerrandom-generation
   (is (= [2147482884 2092764894 1390461064 715295839 79337801]
          (take 5 (iterate-with (r/create 0) r/next-int))))
   (is (= [9223368757592526558 5971984796956658783
