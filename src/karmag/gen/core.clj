@@ -71,6 +71,16 @@
   (let [[[n gen] & _] n-gen-coll]
     (karmag.gen.generator.WeightedGen. n-gen-coll n-gen-coll n gen)))
 
+(defn arbitrary
+  "Generator that takes an arbitrary clojure data structure. Elements
+  in the data structure can be generators in which case they will be
+  called when the corresponding generator function is called on this
+  generator. This generator becomes exhausted when it encounters a
+  generator in the data that is exhausted. If there are no generators
+  it will never be exhausted."
+  [data]
+  (karmag.gen.generator.ArbitraryGen. data))
+
 (defn to-seq
   "Creates a lazy seq of elements taken from the given generator."
   [gen]

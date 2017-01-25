@@ -96,6 +96,11 @@
    (create-sample (gen/weighted [[1 (gen/const :a)]
                                  [10 (gen/const :b)]]))
 
+   (paragraph "`arbitrary` allows generators to be nested within
+   arbitrary data structures. This enables one to build more complex
+   data without having to use generators all the way down.")
+   (create-sample (gen/arbitrary {:key [(gen/from-seq (range 10))]}))
+
    ])
 
 (deftest generate-document

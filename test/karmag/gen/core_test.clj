@@ -78,6 +78,24 @@
         [_ result] (realize 12 gen)]
     (is (= [0 1 2 100 3 4 5 101 6 7 8 102] result))))
 
+(deftest arbitrary-gen-test
+  (let [gen (gen/arbitrary {:key (gen/from-seq (range 10))})
+        [_ result] (realize 5 gen)]
+    (is (= [{:key 0} {:key 1} {:key 2} {:key 3} {:key 4}]
+           result)))
+  (testing "nested"
+    (let [gen (gen/arbitrary [1 2 {:key [(list (gen/const :value))]}
+                              (gen/const 5)])]
+      (is (= [1 2 {:key ['(:value)]} 5]
+             (elem gen)))))
+  (testing "exhaust"
+    (let [gen (gen/arbitrary [(gen/from-seq [1 2 3])])]
+      (is (= [[1] [2] [3]] (second (realize 100 gen))))))
+  (testing "no generator"
+    (let [gen (gen/arbitrary [1 2])]
+      (is (= [1 2] (elem gen)))
+      (is (= 100 (count (second (realize 100 gen))))))))
+
 (deftest to-seq-test
   (is (= (gen/to-seq (gen/from-seq (range 10)))
          (range 10)))
@@ -94,7 +112,8 @@
                            :age (gen/from-seq (range 100))})
               (gen/filter (gen/from-seq (range 100)) even?)
               (gen/shuffle (gen/from-seq (range 100)) {:block-size 10})
-              (gen/weighted [[3 (gen/const 11)] [1 (gen/const 22)]])]]
+              (gen/weighted [[3 (gen/const 11)] [1 (gen/const 22)]])
+              (gen/arbitrary {:key (gen/from-seq (range 100))})]]
     (testing "reseting"
       (doseq [gen gens]
         (let [[new-gen elems] (realize 1000 gen)]
@@ -112,7 +131,8 @@
                            :age stepped})
               (gen/filter stepped even?)
               (gen/shuffle stepped {:block-size 10})
-              (gen/weighted [[3 stepped] [1 (gen/const 22)]])]]
+              (gen/weighted [[3 stepped] [1 (gen/const 22)]])
+              (gen/arbitrary [stepped])]]
     (testing "initializing with used generator"
       (doseq [gen gens]
         (let [[new-gen elems] (realize 5 gen)]

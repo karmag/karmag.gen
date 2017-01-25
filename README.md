@@ -80,3 +80,10 @@ given before moving on to the next.
     (gen/weighted [[1 (gen/const :a)] [10 (gen/const :b)]])
     ;; [:a, :b, :b, ...]
 
+`arbitrary` allows generators to be nested within
+arbitrary data structures. This enables one to build more complex
+data without having to use generators all the way down.
+
+    (gen/arbitrary {:key [(gen/from-seq (range 10))]})
+    ;; [{:key [0]}, {:key [1]}, {:key [2]}, ...]
+

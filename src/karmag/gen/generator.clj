@@ -1,5 +1,6 @@
 (ns karmag.gen.generator
-  (:require [karmag.gen.random :as random]
+  (:require [clojure.walk :refer [postwalk]]
+            [karmag.gen.random :as random]
             [karmag.gen.protocol :refer :all])
   (:import java.util.Random))
 
@@ -29,6 +30,13 @@
         java-random (java.util.Random. seed)]
     (java.util.Collections/shuffle elements java-random)
     [rng gen (vec elements)]))
+
+(defn- at-generator [data f]
+  (postwalk (fn [item]
+              (if (satisfies? Generator item)
+                (f item)
+                item))
+            data))
 
 (defrecord ConstGen [value]
   Generator
@@ -107,3 +115,18 @@
             [[n gen & _]] active]
         (assoc this :active active :n n :gen gen))
       (assoc this :n (dec n) :gen (step gen)))))
+
+(defrecord ArbitraryGen [data]
+  Generator
+  (reset [this]
+    (update this :data at-generator reset))
+  (exhausted? [this]
+    (let [result (atom false)]
+      (at-generator data #(when (exhausted? %)
+                            (reset! result true)
+                            %))
+      @result))
+  (elem [this]
+    (at-generator data elem))
+  (step [this]
+    (update this :data at-generator step)))
