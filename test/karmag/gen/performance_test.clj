@@ -3,10 +3,10 @@
             [karmag.gen.core :as gen]))
 
 (defn- string []
-  (-> ["qwe" "asd" "zxc"] gen/from-seq gen/cycle gen/random))
+  (-> ["qwe" "asd" "zxc"] gen/from-seq gen/cycle gen/shuffle))
 
 (defn- number []
-  (-> (range 1000) gen/from-seq gen/cycle gen/random))
+  (-> (range 1000) gen/from-seq gen/cycle gen/shuffle))
 
 (def ^:private default-keys
   (->> (range (int \a) (inc (int \z)))

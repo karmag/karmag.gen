@@ -60,17 +60,17 @@
     (is (exhausted? final))
     (is (= (filter odd? (range 10)) values))))
 
-(deftest random-gen-test
-  (let [gen (gen/random (gen/from-seq (range 10)))]
+(deftest shuffle-gen-test
+  (let [gen (gen/shuffle (gen/from-seq (range 10)))]
     (is (= [2 9 1 0 4 5 6 3 7 8] (gen/to-seq gen))))
   (testing "block-size"
-    (let [gen (gen/random (gen/from-seq (range 10))
-                          {:block-size 6})]
+    (let [gen (gen/shuffle (gen/from-seq (range 10))
+                           {:block-size 6})]
       (is (= (set (range 6)) (set (take 6 (gen/to-seq gen)))))
       (is (= (set (range 6 10)) (set (drop 6 (gen/to-seq gen)))))))
   (testing "seed"
-    (is (not= (gen/random (gen/from-seq (range 10)) {:seed -1})
-              (gen/random (gen/from-seq (range 10)) {:seed 1})))))
+    (is (not= (gen/shuffle (gen/from-seq (range 10)) {:seed -1})
+              (gen/shuffle (gen/from-seq (range 10)) {:seed 1})))))
 
 (deftest weighted-gen-test
   (let [gen (gen/weighted [[3 (gen/from-seq (range 99))]
@@ -93,7 +93,7 @@
               (gen/mapped {:name (gen/const "qwe")
                            :age (gen/from-seq (range 100))})
               (gen/filter (gen/from-seq (range 100)) even?)
-              (gen/random (gen/from-seq (range 100)) {:block-size 10})
+              (gen/shuffle (gen/from-seq (range 100)) {:block-size 10})
               (gen/weighted [[3 (gen/const 11)] [1 (gen/const 22)]])]]
     (testing "reseting"
       (doseq [gen gens]
@@ -111,7 +111,7 @@
               (gen/mapped {:name (gen/const "qwe")
                            :age stepped})
               (gen/filter stepped even?)
-              (gen/random stepped {:block-size 10})
+              (gen/shuffle stepped {:block-size 10})
               (gen/weighted [[3 stepped] [1 (gen/const 22)]])]]
     (testing "initializing with used generator"
       (doseq [gen gens]

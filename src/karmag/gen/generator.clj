@@ -76,7 +76,7 @@
   (elem [this] (elem gen))
   (step [this] (update-in this [:gen] (comp #(find-next % pred) step))))
 
-(defrecord RandomGen [gen block-size seed rng elements]
+(defrecord ShuffleGen [gen block-size seed rng elements]
   Generator
   (reset [this]
     (let [rng (random/create seed)

@@ -63,14 +63,14 @@ that are {key (elem gen)}.
     (gen/filter (gen/from-seq (range 10)) odd?)
     ;; [1, 3, 5, ...]
 
-`random` shuffles the order of another generator. It
+`shuffle` shuffles the order of another generator. It
 always produces the same result. An additional argument map can be
 given to control the behavior.
 
-    (gen/random (gen/from-seq (range 10)))
+    (gen/shuffle (gen/from-seq (range 10)))
     ;; [2, 9, 1, ...]
 
-    (gen/random (gen/from-seq (range 10)) {:seed 10})
+    (gen/shuffle (gen/from-seq (range 10)) {:seed 10})
     ;; [0, 9, 5, ...]
 
 `weighted` consumes generators in order by a given

@@ -83,12 +83,12 @@
    "`filter` is analogous to `clojure.core/filter`."
    (create-sample (gen/filter (gen/from-seq (range 10)) odd?))
 
-   (paragraph "`random` shuffles the order of another generator. It
+   (paragraph "`shuffle` shuffles the order of another generator. It
    always produces the same result. An additional argument map can be
    given to control the behavior.")
-   (create-sample (gen/random (gen/from-seq (range 10))))
-   (create-sample (gen/random (gen/from-seq (range 10))
-                              {:seed 10}))
+   (create-sample (gen/shuffle (gen/from-seq (range 10))))
+   (create-sample (gen/shuffle (gen/from-seq (range 10))
+                               {:seed 10}))
 
    (paragraph "`weighted` consumes generators in order by a given
    weight argument. Generators will be queried the number of times

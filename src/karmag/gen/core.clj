@@ -1,5 +1,5 @@
 (ns karmag.gen.core
-  (:refer-clojure :exclude [map cycle filter])
+  (:refer-clojure :exclude [map cycle filter shuffle])
   (:require [karmag.gen.generator :as g]
             [karmag.gen.protocol :as prot]
             [karmag.gen.random :as random]))
@@ -49,16 +49,16 @@
     (karmag.gen.generator.FilterGen. gen pred)
     (step (karmag.gen.generator.FilterGen. gen pred))))
 
-(defn random
+(defn shuffle
   "Generator that will fetch :block-size elements from the underlaying
   generator and shuffle the order of those elements to form a new
   order. As elements are consumed more blocks will be fetched and
   shuffled."
-  ([gen] (random gen nil))
+  ([gen] (shuffle gen nil))
   ([gen opts]
    (let [{:keys [block-size seed]} (merge {:block-size 100, :seed 0} opts)]
      (step
-      (karmag.gen.generator.RandomGen.
+      (karmag.gen.generator.ShuffleGen.
        gen block-size seed (random/create seed) nil)))))
 
 (defn weighted
