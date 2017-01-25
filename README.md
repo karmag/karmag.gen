@@ -87,3 +87,8 @@ data without having to use generators all the way down.
     (gen/arbitrary {:key [(gen/from-seq (range 10))]})
     ;; [{:key [0]}, {:key [1]}, {:key [2]}, ...]
 
+## Support functions
+
+`to-seq` takes a generator and returns a lazy sequence
+of values from that generator.
+

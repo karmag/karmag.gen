@@ -101,6 +101,11 @@
    data without having to use generators all the way down.")
    (create-sample (gen/arbitrary {:key [(gen/from-seq (range 10))]}))
 
+   "## Support functions"
+
+   (paragraph "`to-seq` takes a generator and returns a lazy sequence
+   of values from that generator.")
+
    ])
 
 (deftest generate-document
