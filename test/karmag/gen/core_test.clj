@@ -101,6 +101,16 @@
       (is (= (take 100 (range))
              (second (realize 100 gen)))))))
 
+(deftest iterate-gen-test
+  (let [gen (gen/iterate dec 10)
+        [_ result] (realize 5 gen)]
+    (is (= [10 9 8 7 6] result)))
+  (testing "done indicator"
+    (let [gen (gen/iterate inc 0 {:done #(= 9 %)})
+          [gen result] (realize 100 gen)]
+      (is (= result (range 10)))
+      (is (exhausted? gen)))))
+
 (deftest to-seq-test
   (is (= (gen/to-seq (gen/from-seq (range 10)))
          (range 10)))

@@ -128,3 +128,13 @@
     (at-generator data elem))
   (step [this]
     (update this :data at-generator step)))
+
+(defrecord IterateGen [original-state state f done-f head?]
+  Generator
+  (reset [this] (assoc this :state original-state :head? true))
+  (exhausted? [this] (done-f state))
+  (elem [this] (if head? state (f state)))
+  (step [this]
+    (if head?
+      (assoc this :head? false)
+      (assoc this :state (f state)))))

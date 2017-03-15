@@ -1,5 +1,5 @@
 (ns karmag.gen.core
-  (:refer-clojure :exclude [map cycle filter shuffle])
+  (:refer-clojure :exclude [map cycle filter shuffle iterate])
   (:require [karmag.gen.generator :as g]
             [karmag.gen.protocol :as prot]
             [karmag.gen.random :as random]))
@@ -15,7 +15,7 @@
   (karmag.gen.generator.ConstGen. value))
 
 (defn from-seq
-  "Takes a sequence of function that returns a sequence and makes a
+  "Takes a sequence or function that returns a sequence and makes a
   generator that returns the same sequence of elements. The head
   element is held so infinite sequences are not recommended. Use the
   fn form for infinite sequences."
@@ -80,6 +80,17 @@
   it will never be exhausted."
   [data]
   (karmag.gen.generator.ArbitraryGen. data))
+
+(defn iterate
+  "Generates elements by calling f on state, the initial element is
+  the state itself. The element is used as the next state. The
+  option :done is used to indicate that the generator is exhausted,
+  it's passed the state and should return a truthy value to
+  indicate exhaustion."
+  ([f state] (iterate f state nil))
+  ([f state opts]
+   (let [{:keys [done] :or {done (constantly false)}} opts]
+     (karmag.gen.generator.IterateGen. state state f done true))))
 
 (defn to-seq
   "Creates a lazy seq of elements taken from the given generator."

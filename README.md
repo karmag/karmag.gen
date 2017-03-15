@@ -87,6 +87,11 @@ data without having to use generators all the way down.
     (gen/arbitrary {:key [(gen/from-seq (range 10))]})
     ;; [{:key [0]}, {:key [1]}, {:key [2]}, ...]
 
+`iterate` is analogous to `clojure.core/iterate`.
+
+    (gen/iterate (partial + 2) 0)
+    ;; [0, 2, 4, ...]
+
 ## Support functions
 
 `to-seq` takes a generator and returns a lazy sequence
