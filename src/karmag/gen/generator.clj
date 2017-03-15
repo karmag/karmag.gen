@@ -1,5 +1,5 @@
 (ns karmag.gen.generator
-  (:require [clojure.walk :refer [postwalk]]
+  (:require [clojure.walk :refer [walk]]
             [karmag.gen.random :as random]
             [karmag.gen.protocol :refer :all])
   (:import java.util.Random))
@@ -32,11 +32,9 @@
     [rng gen (vec elements)]))
 
 (defn- at-generator [data f]
-  (postwalk (fn [item]
-              (if (satisfies? Generator item)
-                (f item)
-                item))
-            data))
+  (if (satisfies? Generator data)
+    (f data)
+    (walk #(at-generator % f) identity data)))
 
 (defrecord ConstGen [value]
   Generator

@@ -94,7 +94,12 @@
   (testing "no generator"
     (let [gen (gen/arbitrary [1 2])]
       (is (= [1 2] (elem gen)))
-      (is (= 100 (count (second (realize 100 gen))))))))
+      (is (= 100 (count (second (realize 100 gen)))))))
+  (testing "wrapping infinite generators"
+    (let [gen (gen/arbitrary (gen/from-seq (range)))]
+      (is (= 0 (elem gen)))
+      (is (= (take 100 (range))
+             (second (realize 100 gen)))))))
 
 (deftest to-seq-test
   (is (= (gen/to-seq (gen/from-seq (range 10)))
