@@ -22,3 +22,7 @@
                      (take 100000)
                      set
                      count))))
+
+(deftest boolean-generation
+  (is (= [true true true false false true true true true false]
+         (take 10 (iterate-with (r/create 0) r/next-boolean)))))

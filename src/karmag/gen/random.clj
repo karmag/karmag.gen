@@ -25,3 +25,7 @@
   (let [[a g1] (next-int rng)
         [b g2] (next-int g1)]
     [(+ (bit-shift-left a 32) b) g2]))
+
+(defn next-boolean [rng]
+  (let [[n rng] (next-int rng)]
+    [(even? n) rng]))
